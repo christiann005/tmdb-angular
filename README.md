@@ -1,59 +1,56 @@
-# TmdbAngular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.19.
+  El proyecto está enfocado en aplicar buenas prácticas de desarrollo frontend: arquitectura modular, consumo de
+  APIs REST, manejo de estados de carga/error y diseño de interfaz centrado en usabilidad.
+  Entre sus funcionalidades principales se incluyen búsqueda de películas, visualización de resultados enriquecidos
+  (póster, valoración, fecha de estreno y metadatos clave) y navegación fluida para mejorar la experiencia del
+  usuario.
 
-## Development server
+  Este repositorio forma parte de mi práctica en desarrollo web, con énfasis en la construcción de aplicaciones
+  escalables, mantenibles y alineadas con flujos reales de producto.
 
-To start a local development server, run:
+  ## Cómo ejecutar el proyecto
 
-```bash
-ng serve
-```
+  ### Requisitos
+  - Node.js 18+ (recomendado LTS)
+  - Angular CLI instalado globalmente:
+    ```bash
+    npm install -g @angular/cli
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+  ### 1. Clonar el repositorio
 
-## Code scaffolding
+  git clone <URL_DEL_REPOSITORIO>
+  cd tmdb-angular
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+  ### 2. Instalar dependencias
 
-```bash
-ng generate component component-name
-```
+  npm install
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+  ### 3. Configurar variables de entorno
 
-```bash
-ng generate --help
-```
+  Crea el archivo src/environments/environment.ts (si no existe) con tu API key de TMDB:
 
-## Building
+  export const environment = {
+    production: false,
+    tmdbApiKey: 'TU_API_KEY'
+  };
 
-To build the project run:
+  Si usas environment.prod.ts, agrega la misma propiedad para producción.
 
-```bash
-ng build
-```
+  ### 4. Ejecutar en modo desarrollo
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+  ng serve
 
-## Running unit tests
+  Abrir en navegador:
+  http://localhost:4200
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+  ### 5. Generar build de producción
 
-```bash
-ng test
-```
+  ng build --configuration production
 
-## Running end-to-end tests
+  Los archivos compilados se generan en dist/.
 
-For end-to-end (e2e) testing, run:
+  ## Scripts útiles
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+  - npm start: inicia el servidor de desarrollo
+  - npm run build: compila el proyecto
+  - npm test: ejecuta pruebas unitarias
