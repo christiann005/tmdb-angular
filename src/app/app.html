@@ -1,0 +1,110 @@
+﻿<main class="page">
+  <section class="search-panel">
+    <h1>{{ appTitle }}</h1>
+    <p>Busca peliculas y series con The Movie Database.</p>
+
+    <form (ngSubmit)="search()" class="search-form">
+      <input
+        type="text"
+        name="query"
+        [ngModel]="query()"
+        (ngModelChange)="onQueryChange($event)"
+        placeholder="Ejemplo: The Last of Us, Dune, Dark"
+      />
+      <button type="submit" [disabled]="loading()">{{ loading() ? 'Buscando...' : 'Buscar' }}</button>
+    </form>
+
+    @if (error()) {
+      <p class="message error">{{ error() }}</p>
+    }
+    @if (!error() && !loading() && query().trim() && results().length === 0) {
+      <p class="message empty">No se encontraron resultados.</p>
+    }
+  </section>
+
+  <section class="grid">
+    @for (item of results(); track item.id + '-' + item.media_type) {
+      <button type="button" class="card" (click)="openDetails(item)">
+        <img [src]="getPosterUrl(item.poster_path)" [alt]="getTitle(item)" loading="lazy" />
+        <div class="card-content">
+          <h2>{{ getTitle(item) }}</h2>
+          <p class="meta">
+            {{ item.media_type === 'movie' ? 'Pelicula' : 'Serie' }}
+            <span>•</span>
+            {{ getDate(item) }}
+          </p>
+          <p class="rating">⭐ {{ formatRating(item.vote_average) }}</p>
+          <p class="overview">{{ item.overview || 'Sin descripcion disponible.' }}</p>
+        </div>
+      </button>
+    }
+  </section>
+
+  @if (results().length > 0) {
+    <nav class="pagination" aria-label="Paginacion">
+      <button type="button" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1 || loading()">
+        Anterior
+      </button>
+      <p>Pagina {{ currentPage() }} de {{ totalPages() }}</p>
+      <button
+        type="button"
+        (click)="goToPage(currentPage() + 1)"
+        [disabled]="currentPage() >= totalPages() || loading()"
+      >
+        Siguiente
+      </button>
+    </nav>
+  }
+
+  @if (selectedItem()) {
+    <section class="details" aria-live="polite">
+      <button type="button" class="close-btn" (click)="closeDetails()">Cerrar</button>
+
+      @if (detailsLoading()) {
+        <p class="details-state">Cargando detalles...</p>
+      } @else if (detailsError()) {
+        <p class="details-state error">{{ detailsError() }}</p>
+      } @else if (selectedDetails(); as details) {
+        <img
+          class="details-backdrop"
+          [src]="getBackdropUrl(details.backdrop_path || details.poster_path)"
+          [alt]="getTitle(selectedItem()!)"
+        />
+
+        <div class="details-content">
+          <h2>{{ getTitle(selectedItem()!) }}</h2>
+          <p class="tagline">{{ details.tagline || 'Sin tagline' }}</p>
+
+          <div class="details-meta">
+            <p><strong>Tipo:</strong> {{ getMediaLabel(selectedItem()!.media_type) }}</p>
+            <p><strong>Fecha:</strong> {{ getDate(selectedItem()!) }}</p>
+            <p><strong>Duracion:</strong> {{ getDurationInfo(details, selectedItem()!.media_type) }}</p>
+            <p><strong>Generos:</strong> {{ getGenres(details) }}</p>
+            <p><strong>Estado:</strong> {{ details.status || '-' }}</p>
+            <p><strong>Rating:</strong> ⭐ {{ formatRating(details.vote_average) }}</p>
+          </div>
+
+          <p class="details-overview">{{ details.overview || 'Sin descripcion disponible.' }}</p>
+
+          @if (trailerUrl()) {
+            <div class="trailer-block">
+              <h3>Trailer</h3>
+              <p class="trailer-name">{{ trailerName() }}</p>
+              <div class="trailer-frame-wrap">
+                <iframe
+                  [src]="trailerUrl()"
+                  title="Trailer"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+          } @else {
+            <p class="no-trailer">No hay trailer disponible en YouTube para este titulo.</p>
+          }
+        </div>
+      }
+    </section>
+  }
+</main>
